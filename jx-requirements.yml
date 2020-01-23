@@ -1,9 +1,11 @@
 autoUpdate:
   enabled: false
   schedule: ""
-bootConfigURL: https://github.com/jenkins-x/jenkins-x-boot-config.git
+bootConfigURL: https://github.com/jstrachan/boot-helmfile-poc
 cluster:
-  clusterName: robincomet
+  clusterName: jstrachan-dev200
+  devEnvApprovers:
+  - jstrachan
   environmentGitOwner: cb-kubecd
   environmentGitPublic: true
   gitKind: github
@@ -11,19 +13,20 @@ cluster:
   gitPublic: true
   gitServer: https://github.com
   namespace: jx
-  project: jx-development
+  project: jstrachan-multicluster
   provider: gke
-  zone: europe-north1-a
+  zone: europe-west1-c
 environments:
 - ingress:
-    domain: ""
+    domain: 35.195.50.195.nip.io
     externalDNS: false
-    namespaceSubDomain: ""
+    namespaceSubDomain: -jx.
     tls:
       email: ""
       enabled: false
       production: false
   key: dev
+  repository: environment-jstrachan-dev-dev
 - ingress:
     domain: ""
     externalDNS: false
@@ -33,6 +36,7 @@ environments:
       enabled: false
       production: false
   key: staging
+  repository: environment-jstrachan-dev-staging
 - ingress:
     domain: ""
     externalDNS: false
@@ -42,9 +46,10 @@ environments:
       enabled: false
       production: false
   key: production
+  repository: environment-jstrachan-dev-production
 gitops: true
 ingress:
-  domain: ""
+  domain: 35.195.50.195.nip.io
   externalDNS: false
   namespaceSubDomain: -jx.
   tls:
@@ -56,8 +61,8 @@ repository: nexus
 secretStorage: local
 storage:
   backup:
-    enabled: true
-    url: gs://velero-backup-jr
+    enabled: false
+    url: ""
   logs:
     enabled: false
     url: ""
@@ -69,10 +74,9 @@ storage:
     url: ""
 vault: {}
 velero:
-  namespace: velero
   schedule: ""
   ttl: ""
 versionStream:
   ref: v1.0.293
   url: https://github.com/jenkins-x/jenkins-x-versions.git
-webhook: prow
+webhook: lighthouse

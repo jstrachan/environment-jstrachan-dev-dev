@@ -1,0 +1,19 @@
+Index: apps/helmfile.yaml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>repositories:\n  - name: jenkins-x\n    url: https://storage.googleapis.com/chartmuseum.jenkins-x.io\n\nbases:\n  - ../environments.yaml\n\nhelmDefaults:\n  atomic: true\n  verify: false\n  wait: true\n  timeout: 180\n  force: true\n\nreleases:\n\n- name: jxboot-helmfile-resources\n  namespace: jx\n  chart: jenkins-x/jxboot-helmfile-resources\n  values:\n  - {{ requiredEnv \"JX_SECRETS_DIR\" }}secrets.yaml\n  - ../jx-requirements.values.yaml.gotmpl\n  - jxboot-helmfile-resources/values.yaml.gotmpl\n\n- name: nexus\n  namespace: jx\n  chart: jenkins-x/nexus\n\n- name: lighthouse\n  namespace: jx\n  chart: jenkins-x/lighthouse\n  values:\n  - {{ requiredEnv \"JX_SECRETS_DIR\" }}secrets.yaml\n  - lighthouse/values.yaml.gotmpl\n\n- name: tekton\n  namespace: jx\n  chart: jenkins-x/tekton\n  values:\n  - {{ requiredEnv \"JX_SECRETS_DIR\" }}secrets.yaml\n  - tekton/values.yaml.gotmpl\n\n- name: chartmuseum\n  namespace: jx\n  chart: jenkins-x/chartmuseum\n  values:\n  - chartmuseum/values.yaml.gotmpl\n  - {{ requiredEnv \"JX_SECRETS_DIR\" }}secrets.yaml
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- apps/helmfile.yaml	(revision 92973d0d55f49f844ba5761b8541e2bd7f72e4b6)
++++ apps/helmfile.yaml	(date 1579777397651)
+@@ -16,7 +16,8 @@
+ 
+ - name: jxboot-helmfile-resources
+   namespace: jx
+-  chart: jenkins-x/jxboot-helmfile-resources
++  chart: ../../jxboot-helmfile-resources/jxboot-helmfile-resources
++  #chart: jenkins-x/jxboot-helmfile-resources
+   values:
+   - {{ requiredEnv "JX_SECRETS_DIR" }}secrets.yaml
+   - ../jx-requirements.values.yaml.gotmpl
