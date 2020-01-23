@@ -1,0 +1,37 @@
+# from jxboot-resources.yaml
+
+ dev:
+   server: ""
+{{- if .Values.jxRequirements.gitops }}
+   repo: "{{ .Environments.dev.repository }}"
+   owner: "{{ .Environments.dev.owner }}"
+   envOrganisation: "{{ .Values.jxRequirements.cluster.environmentGitOwner }}"
+{{- else }}
+   repo: ""
+   owner: ""
+   envOrganisation: ""
+{{- end }}
+{{- if eq .Values.jxRequirements.cluster.provider "gke" }}
+   dockerRegistryOrg: "{{ .Values.jxRequirements.cluster.project }}"
+{{- else }}
+   dockerRegistryOrg: ""
+{{- end }}
+
+
+ staging:
+   repo: "{{ .Environments.staging.repository }}"
+   owner: "{{ .Environments.staging.owner | default .Values.jxRequirements.cluster.environmentGitOwner }}"
+   server: ""
+   namespace: {{ .Values.jxRequirements.cluster.namespace | default "jx" }}-staging
+{{- if hasKey .Environments.staging "remoteCluster" }}
+   remote: {{ .Environments.staging.remoteCluster | default "false" }}
+{{- end }}
+
+ production:
+   repo: "{{ .Environments.production.repository }}"
+   owner: "{{ .Environments.production.owner | default .Values.jxRequirements.cluster.environmentGitOwner }}"
+   server: ""
+   namespace: {{ .Values.jxRequirements.cluster.namespace | default "jx" }}-production
+{{- if hasKey .Environments.production "remoteCluster" }}
+   remote: {{ .Environments.production.remoteCluster | default "false" }}
+{{- end }}

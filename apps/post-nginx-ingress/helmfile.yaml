@@ -1,0 +1,45 @@
+repositories:
+  - name: jenkins-x
+    url: https://storage.googleapis.com/chartmuseum.jenkins-x.io
+
+bases:
+  - ../../environments.yaml
+
+helmDefaults:
+  atomic: true
+  verify: false
+  wait: true
+  timeout: 180
+  force: true
+
+releases:
+
+- name: nexus
+  namespace: jx
+  chart: jenkins-x/nexus
+
+- name: lighthouse
+  namespace: jx
+  chart: jenkins-x/lighthouse
+  values:
+  - {{ requiredEnv "JX_SECRETS_DIR" }}secrets.yaml
+
+- name: tekton
+  namespace: jx
+  chart: jenkins-x/tekton
+  values:
+  - {{ requiredEnv "JX_SECRETS_DIR" }}secrets.yaml
+
+- name: jxboot-resources
+  namespace: jx
+  chart: jenkins-x/jxboot-resources
+  values:
+  - {{ requiredEnv "JX_SECRETS_DIR" }}secrets.yaml
+  - ../jxboot-resources/values.yaml.gotmpl
+
+- name: chartmuseum
+  namespace: jx
+  chart: jenkins-x/chartmuseum
+  values:
+  - ../chartmuseum/values.yaml.gotmpl
+  - {{ requiredEnv "JX_SECRETS_DIR" }}secrets.yaml

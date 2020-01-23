@@ -1,0 +1,66 @@
+repositories:
+  - name: stable
+    url: https://kubernetes-charts.storage.googleapis.com
+  - name: "zloeber"
+    url: "git+https://github.com/zloeber/helm-namespace@chart"
+  - name: jenkins-x
+    url: https://storage.googleapis.com/chartmuseum.jenkins-x.io
+  # - name: bitnami
+  #   url: https://charts.bitnami.com/bitnami
+
+bases:
+  - ../../environments.yaml
+
+helmDefaults:
+  atomic: true
+  verify: false
+  wait: true
+  timeout: 180
+  force: true
+
+releases:
+# jx step verify preinstall -b --namespace jx --disable-verify-helm --disable-verify-packages
+# will already create the namespace and helm 3 will barf if we try and create it below too
+# - name: namespaces-velero
+#   chart: zloeber/namespace
+#   namespace: jx
+#   values:
+#   - namespaces:
+#     - velero
+
+- name: namespaces-nginx
+  chart: zloeber/namespace
+  namespace: jx
+  values:
+  - namespaces:
+    - nginx
+
+- name: nginx
+  namespace: nginx
+  chart: stable/nginx-ingress
+  values:
+  - ./values.yaml.gotmpl
+  needs: 
+  - jx/namespaces-nginx
+
+# - name: velero
+#   namespace: velero
+#   chart: stable/velero
+#   values:
+#   - ./velero/values.yaml.gotmpl
+
+# - name: velero-backup
+#   namespace: velero
+#   chart: jenkins-x/velero-backup
+#   values:
+#   - ./velero/values.yaml.gotmpl
+#   needs: 
+#   - velero/velero
+
+##########################################
+
+# - name: externaldns
+#   namespace: jx
+#   chart: bitnami/external-dns
+#   values:
+#   - ./apps/external-dns/values.yaml.gotmpl

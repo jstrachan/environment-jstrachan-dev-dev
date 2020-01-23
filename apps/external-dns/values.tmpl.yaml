@@ -1,0 +1,22 @@
+enabled: {{ .Requirements.jxRequirements.ingress.externalDNS }}
+sources:
+- ingress
+{{- if eq .Requirements.jxRequirements.cluster.provider "eks"}}
+provider: aws
+aws:
+  region: {{ .Requirements.jxRequirements.cluster.region}}
+securityContext:
+  fsGroup: 65534
+{{- else if eq .Requirements.jxRequirements.cluster.provider "gke"}}
+provider: google
+google:
+  serviceAccountSecret: external-dns-gcp-sa
+ {{- if hasKey .Requirements.jxRequirements.cluster "project" }}
+  project: "{{ .Requirements.jxRequirements.cluster.project }}"
+ {{ end }}
+{{- end}}
+
+rbac:
+  create: true
+domainFilters:
+- "{{ .Requirements.jxRequirements.ingress.domain }}"

@@ -1,0 +1,10 @@
+helmDefaults:
+  atomic: true
+  verify: false
+  wait: true
+  timeout: 180
+  force: true
+
+helmfiles:
+  - apps/nginx-ingress/helmfile.yaml
+  - apps/post-nginx-ingress/helmfile.yaml
